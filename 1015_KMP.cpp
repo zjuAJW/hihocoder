@@ -1,3 +1,8 @@
+/*
+KMP算法，next数组的表示以及一些边界情况很坑。。。一不小心就写错了
+ */
+
+
 #include <iostream>
 #include <vector>
 #include <iterator>
@@ -9,13 +14,13 @@
 #include <stdio.h>
 using namespace std;
 
-void calNext(const string& pattern,vector<int>& next) {
-	next.push_back(0);
+void calNext(const string& pattern, vector<int>& next) {
+	next.push_back(-1);
 	for (int i = 1; i < pattern.size(); ++i) {
 		int j = next[i - 1];
-		while (j != 0 && pattern[i] != pattern[j]) j = next[j - 1];
-		if (pattern[i] == pattern[j]) next.push_back(j + 1);
-		else next.push_back(0);
+		while (j != -1 && pattern[i] != pattern[j + 1]) j = next[j];
+		if (pattern[i] == pattern[j + 1]) next.push_back(j + 1);
+		else next.push_back(-1);
 	}
 }
 
@@ -24,18 +29,23 @@ int kmp(const string &s, const string &pattern) {
 	vector<int> next;
 	calNext(pattern, next);
 	int i = 0;
-	while(i <= s.length() - pattern.length()){
-		int pos = i;
-		int j = 0;
-		while (j<pattern.length() && pattern[j] == s[pos]) {
+	int j = 0;
+	while (i < s.size()) {
+		while (j<pattern.size() && pattern[j] == s[i]) {
 			++j;
-			++pos;
-		}
-		if (j == pattern.length()) {
-			++result;
 			++i;
-		}else
-			i = pos - next[j - 1] + 1;
+		}
+		if (j == pattern.size()) {
+			++result;
+			j = next[j - 1] + 1;
+		}
+		else if(j == 0){
+			++i;
+		}
+		else {
+			j = next[j - 1] + 1;
+		}
+		
 	}
 	return result;
 }
