@@ -34,7 +34,7 @@ int manacher(string &s) {
 				break;
 		}
 		if (i + length[i] - 1 > max_right) {
-			max_right = i + length[i] - 1;
+			max_right = i + length[i] - 1;	
 			pos = i;
 		}
 		max = max > length[i] ? max : length[i];
